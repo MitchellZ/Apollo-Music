@@ -1,5 +1,5 @@
 import { Player } from './components/player';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback} from 'react';
 import './App.css';
 
 function App() {
