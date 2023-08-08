@@ -1,37 +1,47 @@
 import { Player } from './components/player';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './App.css';
 
 function App() {
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
-  const progressBarContainerRef = useRef(null); // New ref for the progress bar container
+  const progressBarContainerRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isDragging, setIsDragging] = useState(false); // New state to track dragging
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
-    audioRef.current.addEventListener('pause', handlePause);
-    audioRef.current.addEventListener('playing', handlePlay);
-    audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-    audioRef.current.addEventListener('loadeddata', handleLoadedData);
+    const currentAudioRef = audioRef.current;
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
+    const handlePlay = () => {
+      setIsPlaying(true);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(currentAudioRef.currentTime);
+    };
+
+    const handleLoadedData = () => {
+      setDuration(currentAudioRef.duration);
+    };
+
+    currentAudioRef.addEventListener('pause', handlePause);
+    currentAudioRef.addEventListener('playing', handlePlay);
+    currentAudioRef.addEventListener('timeupdate', handleTimeUpdate);
+    currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
     return () => {
-      audioRef.current.removeEventListener('pause', handlePause);
-      audioRef.current.removeEventListener('playing', handlePlay);
-      audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-      audioRef.current.removeEventListener('loadeddata', handleLoadedData);
+      currentAudioRef.removeEventListener('pause', handlePause);
+      currentAudioRef.removeEventListener('playing', handlePlay);
+      currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
+      currentAudioRef.removeEventListener('loadeddata', handleLoadedData);
     };
   }, []);
-
-  const handlePause = () => {
-    setIsPlaying(false);
-  };
-
-  const handlePlay = () => {
-    setIsPlaying(true);
-  };
 
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
@@ -52,14 +62,6 @@ function App() {
     console.log('Skip Backward');
   };
 
-  const handleTimeUpdate = () => {
-    setCurrentTime(audioRef.current.currentTime);
-  };
-
-  const handleLoadedData = () => {
-    setDuration(audioRef.current.duration);
-  };
-
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
@@ -73,32 +75,20 @@ function App() {
     updateSeekTime(e.clientX);
   };
 
-  const handleDocumentMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleDocumentMouseMove = (e) => {
-    if (isDragging) {
-      updateSeekTime(e.clientX);
-    }
-  };
-
   const handleProgressBarTouchStart = (e) => {
     setIsDragging(true);
     updateSeekTime(e.touches[0].clientX);
+  };
+
+  const handleDocumentMouseUp = () => {
+    setIsDragging(false);
   };
 
   const handleDocumentTouchEnd = () => {
     setIsDragging(false);
   };
 
-  const handleDocumentTouchMove = (e) => {
-    if (isDragging) {
-      updateSeekTime(e.touches[0].clientX);
-    }
-  };
-
-  const updateSeekTime = (clientX) => {
+  const updateSeekTime = useCallback((clientX) => {
     const progressBar = progressBarRef.current;
     const progressBarContainer = progressBarContainerRef.current;
     const progressBarRect = progressBar.getBoundingClientRect();
@@ -113,9 +103,21 @@ function App() {
     const seekTime = (dragPosition / progressBarWidth) * duration;
     setCurrentTime(seekTime);
     audioRef.current.currentTime = seekTime;
-  };
+  }, [audioRef, progressBarRef, progressBarContainerRef, duration, setCurrentTime]);
 
   useEffect(() => {
+    const handleDocumentMouseMove = (e) => {
+      if (isDragging) {
+        updateSeekTime(e.clientX);
+      }
+    };
+
+    const handleDocumentTouchMove = (e) => {
+      if (isDragging) {
+        updateSeekTime(e.touches[0].clientX);
+      }
+    };
+
     document.addEventListener('mouseup', handleDocumentMouseUp);
     document.addEventListener('mousemove', handleDocumentMouseMove);
     document.addEventListener('touchend', handleDocumentTouchEnd);
@@ -127,7 +129,7 @@ function App() {
       document.removeEventListener('touchend', handleDocumentTouchEnd);
       document.removeEventListener('touchmove', handleDocumentTouchMove);
     };
-  }, [isDragging]);
+  }, [isDragging, updateSeekTime]);
 
   return (
     <div className="app-container">
@@ -141,7 +143,21 @@ function App() {
           </div>
         </div>
       </div>
-      <Player   progressBarContainerRef={progressBarContainerRef} handleProgressBarMouseDown={handleProgressBarMouseDown} handleProgressBarTouchStart={handleProgressBarTouchStart} progress={progress} progressBarRef={progressBarRef} formatTime={formatTime} currentTime={currentTime} duration={duration} handleSkipBackward={handleSkipBackward} handlePlayPause={handlePlayPause} isPlaying={isPlaying} handleSkipForward={handleSkipForward} audioRef={audioRef}  />
+      <Player
+        progressBarContainerRef={progressBarContainerRef}
+        handleProgressBarMouseDown={handleProgressBarMouseDown}
+        handleProgressBarTouchStart={handleProgressBarTouchStart}
+        progress={progress}
+        progressBarRef={progressBarRef}
+        formatTime={formatTime}
+        currentTime={currentTime}
+        duration={duration}
+        handleSkipBackward={handleSkipBackward}
+        handlePlayPause={handlePlayPause}
+        isPlaying={isPlaying}
+        handleSkipForward={handleSkipForward}
+        audioRef={audioRef}
+      />
     </div>
   );
 }
