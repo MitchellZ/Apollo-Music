@@ -1,5 +1,5 @@
 import { Player } from './components/player';
-import React, { useState, useRef, useEffect, useCallback} from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import './App.css';
 
 function App() {
@@ -10,6 +10,15 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [lastUpdatedTime, setLastUpdatedTime] = useState(0);
+
+  const [songInfo, setSongInfo] = useState({
+    title: 'Dance The Night',
+    artist: 'Dua Lipa',
+    album: '',
+    artworkSrc: '/covers/default.png',
+    artworkType: 'image/png'
+  });
 
   useEffect(() => {
     const currentAudioRef = audioRef.current;
@@ -20,10 +29,13 @@ function App() {
 
     const handlePlay = () => {
       setIsPlaying(true);
+      requestAnimationFrame(updateTimeWhilePlaying);
     };
 
     const handleTimeUpdate = () => {
-      setCurrentTime(currentAudioRef.currentTime);
+      if (!isPlaying) {
+        setCurrentTime(currentAudioRef.currentTime);
+      }
     };
 
     const handleLoadedData = () => {
@@ -35,13 +47,36 @@ function App() {
     currentAudioRef.addEventListener('timeupdate', handleTimeUpdate);
     currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new window.MediaMetadata({
+        title: songInfo.title,
+        artist: songInfo.artist,
+        album: songInfo.album,
+        artwork: [
+          { src: songInfo.artworkSrc, type: songInfo.artworkType }
+        ]
+      });
+
+      navigator.mediaSession.setActionHandler('previoustrack', () => {
+        const seekTime = Math.max(0, currentTime - 10);
+        setCurrentTime(seekTime);
+        audioRef.current.currentTime = seekTime;
+      });
+
+      navigator.mediaSession.setActionHandler('nexttrack', () => {
+        const seekTime = Math.min(duration, currentTime + 10);
+        setCurrentTime(seekTime);
+        audioRef.current.currentTime = seekTime;
+      });
+    }
+
     return () => {
       currentAudioRef.removeEventListener('pause', handlePause);
       currentAudioRef.removeEventListener('playing', handlePlay);
       currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
       currentAudioRef.removeEventListener('loadeddata', handleLoadedData);
     };
-  }, []);
+  }, [currentTime, duration, isPlaying]);
 
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
@@ -49,17 +84,28 @@ function App() {
       audioRef.current.pause();
     } else {
       audioRef.current.play();
+      requestAnimationFrame(updateTimeWhilePlaying);
+    }
+  };
+
+  const updateTimeWhilePlaying = () => {
+    if (isPlaying) {
+      setCurrentTime(audioRef.current.currentTime);
+      setLastUpdatedTime(Date.now());
+      requestAnimationFrame(updateTimeWhilePlaying);
     }
   };
 
   const handleSkipForward = () => {
-    // Add logic to skip forward here
-    console.log('Skip Forward');
+    const seekTime = Math.min(duration, currentTime + 10);
+    setCurrentTime(seekTime);
+    audioRef.current.currentTime = seekTime;
   };
 
   const handleSkipBackward = () => {
-    // Add logic to skip backward here
-    console.log('Skip Backward');
+    const seekTime = Math.max(0, currentTime - 10);
+    setCurrentTime(seekTime);
+    audioRef.current.currentTime = seekTime;
   };
 
   const formatTime = (timeInSeconds) => {
@@ -103,7 +149,7 @@ function App() {
     const seekTime = (dragPosition / progressBarWidth) * duration;
     setCurrentTime(seekTime);
     audioRef.current.currentTime = seekTime;
-  }, [audioRef, progressBarRef, progressBarContainerRef, duration, setCurrentTime]);
+  }, [audioRef, progressBarRef, progressBarContainerRef, duration]);
 
   useEffect(() => {
     const handleDocumentMouseMove = (e) => {
@@ -134,12 +180,11 @@ function App() {
   return (
     <div className="app-container">
       <div className="content">
-        {/* Your main content here */}
         <div className="cover-art-container">
-          <img className="cover-art-image" src="/covers/default.png" alt="cover art" draggable="false"/>
+          <img className="cover-art-image" src={songInfo.artworkSrc} alt="cover art" draggable="false" />
           <div className="song-info">
-            <p className="artist">Dua Lipa</p>
-            <p className="song-title">Dance The Night</p>
+            <p className="artist">{songInfo.artist}</p>
+            <p className="song-title">{songInfo.title}</p>
           </div>
         </div>
       </div>

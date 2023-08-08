@@ -42,7 +42,7 @@ export function Player({
           <button id='play-pause' onClick={handlePlayPause}>
             {isPlaying ? <FaPause style={{
           verticalAlign: 'middle'
-        }} /> : <FaPlay style={{
+        }}/> : <FaPlay style={{
           verticalAlign: 'middle'
         }} />}
           </button>

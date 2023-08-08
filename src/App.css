@@ -137,7 +137,7 @@ body, html {
   height: 58px;
   margin: 0 6px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: transparent;
   color: white;
   font-size: 18pt;
   display: flex;
@@ -145,16 +145,15 @@ body, html {
   align-items: center;
   border: none;
   cursor: pointer;
-  /* Additional button styles here */
 }
 
 button#play-pause {
-  font-size: 18pt;
   width: 70px;
   height: 70px;
-  background-color: white;
-  color: black;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  background-color: transparent; /* Set the background color for the play/pause button */
+  border: solid white 3.5px;
+  color: white;
 }
 
 .button-container button svg {
@@ -163,7 +162,7 @@ button#play-pause {
 
 /* Apply a box-shadow to the buttons when pressed */
 button#play-pause:active {
-  background-color: #bcbcbc;
+  background-color: rgba(208, 208, 208, 0.1);
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
