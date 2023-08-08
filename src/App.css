@@ -4,6 +4,8 @@
 body, html {
   margin: 0;
   padding: 0;
+  /* Prevent reloading by pulling from the top */
+  overscroll-behavior-y: contain;
 }
 
 .app-container {
@@ -19,6 +21,12 @@ body, html {
 }
 
 .cover-art-container {
+  /* Disable select */
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   display: flex;
   flex-direction: column;
   justify-content: center;

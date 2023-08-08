@@ -136,7 +136,7 @@ function App() {
       <div className="content">
         {/* Your main content here */}
         <div className="cover-art-container">
-          <img className="cover-art-image" src="/covers/default.png" alt="cover art" />
+          <img className="cover-art-image" src="/covers/default.png" alt="cover art" draggable="false"/>
           <div className="song-info">
             <p className="artist">Dua Lipa</p>
             <p className="song-title">Dance The Night</p>
