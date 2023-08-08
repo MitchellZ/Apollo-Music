@@ -10,15 +10,21 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [lastUpdatedTime, setLastUpdatedTime] = useState(0);
 
-  const [songInfo, setSongInfo] = useState({
+  const [songInfo] = useState({
     title: 'Dance The Night',
     artist: 'Dua Lipa',
     album: '',
     artworkSrc: '/covers/default.png',
     artworkType: 'image/png'
   });
+
+  const updateTimeWhilePlaying = useCallback(() => {
+    if (isPlaying) {
+      setCurrentTime(audioRef.current.currentTime);
+      requestAnimationFrame(updateTimeWhilePlaying);
+    }
+  }, [isPlaying]);
 
   useEffect(() => {
     const currentAudioRef = audioRef.current;
@@ -76,7 +82,7 @@ function App() {
       currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
       currentAudioRef.removeEventListener('loadeddata', handleLoadedData);
     };
-  }, [currentTime, duration, isPlaying]);
+  }, [currentTime, duration, isPlaying, songInfo.album, songInfo.artist, songInfo.artworkSrc, songInfo.artworkType, songInfo.title, updateTimeWhilePlaying]);
 
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
@@ -84,14 +90,6 @@ function App() {
       audioRef.current.pause();
     } else {
       audioRef.current.play();
-      requestAnimationFrame(updateTimeWhilePlaying);
-    }
-  };
-
-  const updateTimeWhilePlaying = () => {
-    if (isPlaying) {
-      setCurrentTime(audioRef.current.currentTime);
-      setLastUpdatedTime(Date.now());
       requestAnimationFrame(updateTimeWhilePlaying);
     }
   };
