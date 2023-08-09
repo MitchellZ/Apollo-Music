@@ -61,9 +61,7 @@ body, html {
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.card {
-  /* margin: 15px; */
-  /* border-radius: 10px; */
+.player-card {
   padding-bottom: 26px;
   flex-shrink: 0; /* Prevent the card from shrinking to fit the content */
   background-color: rgba(20, 20, 20, 0.64); /* Darker background color */
@@ -71,6 +69,7 @@ body, html {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
   position: relative; /* Add position relative to the card */
   padding-top: 20px; /* Add some top padding to accommodate the progress bar */
+  max-height: 25vh;
 }
 
 /* Updated styles for the progress bar */
@@ -135,7 +134,7 @@ body, html {
 .button-container button {
   width: 58px;
   height: 58px;
-  margin: 0 6px;
+  margin: 0px 6px;
   border-radius: 50%;
   background-color: transparent;
   color: white;

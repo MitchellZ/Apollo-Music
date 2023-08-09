@@ -163,7 +163,7 @@ function Player() {
   }, [isDragging, updateSeekTime]);
 
   return (
-    <div className="card">
+    <div className="player-card">
       <div className="progress-bar-container" ref={progressBarContainerRef}>
         <div className="progress-bar-hitbox" // Use the hitbox div for handling mouse events
           onMouseDown={handleProgressBarMouseDown} // Add onMouseDown event handler
