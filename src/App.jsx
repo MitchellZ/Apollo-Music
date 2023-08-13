@@ -6,7 +6,7 @@ import './App.css';
 function App() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
-  const songs = useMemo(() => [
+  const default_songs = useMemo(() => [
     {
       song: 'Dance The Night',
       artist: 'Dua Lipa',
@@ -26,6 +26,33 @@ function App() {
       album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/7d957bd27dd562bee7aaa89eafa0bbe6.jpg#7d957bd27dd562bee7aaa89eafa0bbe6',
     }
   ], []);
+
+  const [APIResponse, setAPIResponse] = useState({
+    message: "",
+    response: []
+  });
+
+  const user_request = 'A few recent hits';
+
+  const fetchSongs = async () => {
+    try {
+      const response = await fetch('http://playlist.us.to:5000/query?message=' + user_request);
+      const data = await response.json();
+      if (data.response && data.response.length > 0) {
+        setAPIResponse(data);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch playlist from API
+    console.log('Fetching playlist...');
+    fetchSongs();
+  }, []);
+
+  const songs = useMemo(() => APIResponse.response.length > 0 ? APIResponse.response : default_songs, [APIResponse.response, default_songs]);
 
   const playNextSong = () => {
     const newIndex = (currentSongIndex + 1) % songs.length;
@@ -70,6 +97,8 @@ function App() {
 
   return (
     <div className="app-container">
+      <div className="background-gradient"/>
+      <div class="frosted-background-overlay"/>
       <div className="content">
         <NowPlaying songInfo={songInfo} />
       </div>

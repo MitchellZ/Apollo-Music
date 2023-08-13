@@ -12,7 +12,28 @@ body, html {
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Set the container's minimum height to fill the viewport */
-  background: linear-gradient(to bottom right, rgb(103, 143, 217), rgb(216, 130, 216)); /* Diagonal gradient background */
+  z-index: 1;
+}
+
+.background-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(to bottom right, rgb(103, 143, 217), rgb(216, 130, 216));
+  z-index: -1; /* Place the background gradient behind the content */
+}
+  
+.frosted-background-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.5); /* Frosted glass background */
+  z-index: -1;
 }
 
 .content {
@@ -34,9 +55,11 @@ body, html {
   height: calc(100vh - 200px); /* Adjust the height as needed to center the cover art */
 }
 
+
 .cover-art-image {
-  max-width: 74%;
-  max-height: 74%;
+  width: 72vw;
+  height: 72vw;
+  object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the cover art */
   border-radius: 5%; /* Round the corners of the cover art */
 }
@@ -47,7 +70,7 @@ body, html {
 }
 
 .artist {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -62,9 +85,9 @@ body, html {
 }
 
 .player-card {
-  padding-bottom: 26px;
+  padding-bottom: 32px;
   flex-shrink: 0; /* Prevent the card from shrinking to fit the content */
-  background-color: rgba(20, 20, 20, 0.64); /* Darker background color */
+  background-color: rgba(20, 20, 20, 0.72); /* Darker background color */
   backdrop-filter: blur(20px); /* More blur for frosted glass look */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
   position: relative; /* Add position relative to the card */
