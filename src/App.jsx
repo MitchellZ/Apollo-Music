@@ -1,4 +1,5 @@
-import Player from './components/player';
+import NowPlaying from './components/NowPlaying';
+import Player from './components/Player';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
@@ -30,13 +31,7 @@ function App() {
   return (
     <div className="app-container">
       <div className="content">
-        <div className="cover-art-container">
-          <img className="cover-art-image" src={songInfo.artworkSrc} alt="cover art" draggable="false" />
-          <div className="song-info">
-            <p className="artist">{songInfo.artist}</p>
-            <p className="song-title">{songInfo.title}</p>
-          </div>
-        </div>
+        <NowPlaying songInfo={songInfo}/>
       </div>
       <Player/>
     </div>
