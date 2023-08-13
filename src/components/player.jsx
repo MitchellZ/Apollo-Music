@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
-function Player() {
-
+function Player({ playNextSong, playPreviousSong }) {
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const progressBarContainerRef = useRef(null);
@@ -19,7 +18,6 @@ function Player() {
   }, [isPlaying]);
 
   useEffect(() => {
-
     const currentAudioRef = audioRef.current;
 
     const handlePause = () => {
@@ -46,31 +44,22 @@ function Player() {
     currentAudioRef.addEventListener('timeupdate', handleTimeUpdate);
     currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
-    if ('mediaSession' in navigator) {
-
-      navigator.mediaSession.setActionHandler('previoustrack', () => {
-        const seekTime = Math.max(0, currentTime - 10);
-        setCurrentTime(seekTime);
-        audioRef.current.currentTime = seekTime;
-      });
-
-      navigator.mediaSession.setActionHandler('nexttrack', () => {
-        const seekTime = Math.min(duration, currentTime + 10);
-        setCurrentTime(seekTime);
-        audioRef.current.currentTime = seekTime;
-      });
-
-    }
-
     return () => {
       currentAudioRef.removeEventListener('pause', handlePause);
       currentAudioRef.removeEventListener('playing', handlePlay);
       currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
       currentAudioRef.removeEventListener('loadeddata', handleLoadedData);
     };
+  }, [isPlaying, updateTimeWhilePlaying]);
 
-  }, [currentTime, duration, isPlaying, updateTimeWhilePlaying]);
-  
+  useEffect(() => {
+    if ('mediaSession' in navigator) {
+ navigator.mediaSession.setActionHandler('play', () => {handlePlayPause();});
+      navigator.mediaSession.setActionHandler('previoustrack', () => {handleSkipBackward();});
+      navigator.mediaSession.setActionHandler('nexttrack', () => {handleSkipForward();});
+    }
+  });
+
   const handlePlayPause = () => {
     setIsPlaying((prevState) => !prevState);
     if (isPlaying) {
@@ -82,13 +71,17 @@ function Player() {
   };
 
   const handleSkipForward = () => {
-    const seekTime = Math.min(duration, currentTime + 10);
+    playNextSong();
+    const seekTime = 0;
     setCurrentTime(seekTime);
     audioRef.current.currentTime = seekTime;
   };
 
   const handleSkipBackward = () => {
-    const seekTime = Math.max(0, currentTime - 10);
+    if (currentTime <= 5) {
+      playPreviousSong();
+    }
+    const seekTime = 0;
     setCurrentTime(seekTime);
     audioRef.current.currentTime = seekTime;
   };
@@ -165,16 +158,13 @@ function Player() {
   return (
     <div className="player-card">
       <div className="progress-bar-container" ref={progressBarContainerRef}>
-        <div className="progress-bar-hitbox" // Use the hitbox div for handling mouse events
-          onMouseDown={handleProgressBarMouseDown} // Add onMouseDown event handler
-          onTouchStart={handleProgressBarTouchStart} // Add onTouchStart event handler
+        <div
+          className="progress-bar-hitbox"
+          onMouseDown={handleProgressBarMouseDown}
+          onTouchStart={handleProgressBarTouchStart}
         >
-          <div className="progress-bar" style={{
-            '--progress': progress + '%'
-          }} ref={progressBarRef}>
-            <div className="progress-thumb" style={{
-              left: progress + '%'
-            }}></div>
+          <div className="progress-bar" style={{ '--progress': progress + '%' }} ref={progressBarRef}>
+            <div className="progress-thumb" style={{ left: progress + '%' }}></div>
           </div>
         </div>
         <div className="timecodes">
@@ -187,11 +177,7 @@ function Player() {
           <FaStepBackward />
         </button>
         <button id='play-pause' onClick={handlePlayPause}>
-          {isPlaying ? <FaPause style={{
-            verticalAlign: 'middle'
-          }} /> : <FaPlay style={{
-            verticalAlign: 'middle'
-          }} />}
+          {isPlaying ? <FaPause style={{ verticalAlign: 'middle' }} /> : <FaPlay style={{ verticalAlign: 'middle' }} />}
         </button>
         <button onClick={handleSkipForward}>
           <FaStepForward />
