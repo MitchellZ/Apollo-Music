@@ -14,10 +14,10 @@ function App() {
       album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/a8974f61b7c7b8d8f6b2d34a5a19b81b.jpg#a8974f61b7c7b8d8f6b2d34a5a19b81b',
     },
     {
-      song: 'Break My Heart',
+      song: 'Levitating',
       artist: 'Dua Lipa',
       song_link: null,
-      album_art: null,
+      album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/5765edb5fa2e90228f53a19ec963e82b.jpg#5765edb5fa2e90228f53a19ec963e82b',
     },
     {
       song: 'Blinding Lights',
