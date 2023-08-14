@@ -36,7 +36,7 @@ function App() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch('http://playlist.us.to:5000/query?message=' + user_request);
+      const response = await fetch('/query?message=' + user_request);
       const data = await response.json();
       if (data.response && data.response.length > 0) {
         setAPIResponse(data);

@@ -183,7 +183,7 @@ function Player({ playNextSong, playPreviousSong }) {
           <FaStepForward />
         </button>
       </div>
-      <audio ref={audioRef} src="/audio/Dance The Night.mp3" />
+      <audio ref={audioRef} src="/audio/Dance_The_Night.mp3" />
     </div>
   );
 }
