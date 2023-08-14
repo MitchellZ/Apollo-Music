@@ -1,6 +1,6 @@
 import NowPlaying from './components/NowPlaying';
 import Player from './components/Player';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 
 function App() {
@@ -38,9 +38,9 @@ function App() {
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
       const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`)}`);
+      console.debug(response);
       let data = await response.json();
       data = JSON.parse(data.contents)
-      console.log(data);
       if (data.response && data.response.length > 0) {
         setAPIResponse(data);
       }
@@ -50,10 +50,17 @@ function App() {
     }
   };
 
+  const fetching = useRef(false); // useRef to manage the fetching flag
+
   useEffect(() => {
-    // Fetch playlist from API
-    console.log('Fetching playlist...');
-    fetchSongs();
+  if (fetching.current)
+      return;
+
+  // Fetch playlist from API
+  console.debug('Fetching playlist.');
+  fetching.current = true;
+  fetchSongs();
+    
   }, []);
 
   const songs = useMemo(() => APIResponse.response.length > 0 ? APIResponse.response : default_songs, [APIResponse.response, default_songs]);
