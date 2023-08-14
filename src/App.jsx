@@ -36,8 +36,10 @@ function App() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch('/query?message=' + user_request);
-      const data = await response.json();
+      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('http://playlist.us.to:5000/query?message=' + user_request)}`);
+      let data = await response.json();
+      data = JSON.parse(data.contents)
+      console.log(data);
       if (data.response && data.response.length > 0) {
         setAPIResponse(data);
       }
