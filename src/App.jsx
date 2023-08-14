@@ -58,6 +58,7 @@ function App() {
       setShowGenerationCard(false);
       setShowNowPlaying(true);
     }
+    // eslint-disable-next-line
   }, [songs]);
 
   const [generationTriggered, setGenerationTriggered] = useState(false);
