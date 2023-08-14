@@ -55,6 +55,73 @@ body, html {
   height: calc(100vh - 200px); /* Adjust the height as needed to center the cover art */
 }
 
+.generation-card {
+  /* Align content to center */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 64%;
+  padding: 20px;
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(20, 20, 20, 0.32);
+}
+
+.generation-card h2 {
+  font-size: 25px;
+  font-weight: 700;
+  /* Use gradient for text color */
+  background: linear-gradient(to right, #80b8ef, #bb63bb);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.generation-request {
+  /* Modern styling for input */
+  width: 78%;
+  padding: 10px;
+  border-radius: 5px;
+  border: solid;
+  border-color: #8a6bc1;
+  outline: none;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: rgba(150, 150, 150, 0.25);
+  color: white;
+  margin-bottom: 10%;
+}
+
+.generation-button{
+  /* Button with gradient and modern styling */
+  background: linear-gradient(to right, #80b8ef, #bb638d);
+  padding: 14px;
+  border-radius: 5px;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Put button at the bottom */
+  position: absolute;
+  bottom: 5%;
+}
+
+.generation-button:hover{
+  /* Button with gradient and modern styling */
+  background: linear-gradient(to right, #6694c2, #b05c85);
+  color: rgb(234, 234, 234);
+}
+
+.generation-button:active{
+  /* Button with gradient and modern styling */
+  background: linear-gradient(to right, #344b62, #703c55);
+  color: rgb(200, 200, 200);
+}
 
 .cover-art-image {
   width: 72vw;

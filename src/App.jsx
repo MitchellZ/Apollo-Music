@@ -1,3 +1,4 @@
+import { GenerationCard } from './components/GenerationCard';
 import NowPlaying from './components/NowPlaying';
 import Player from './components/Player';
 import ColorThief from 'colorthief';
@@ -12,19 +13,7 @@ function App() {
       song: 'Dance The Night',
       artist: 'Dua Lipa',
       song_link: null,
-      album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/a8974f61b7c7b8d8f6b2d34a5a19b81b.jpg#a8974f61b7c7b8d8f6b2d34a5a19b81b',
-    },
-    {
-      song: 'Levitating',
-      artist: 'Dua Lipa',
-      song_link: null,
-      album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/5765edb5fa2e90228f53a19ec963e82b.jpg#5765edb5fa2e90228f53a19ec963e82b',
-    },
-    {
-      song: 'Blinding Lights',
-      artist: 'The Weeknd',
-      song_link: null,
-      album_art: 'https://lastfm.freetls.fastly.net/i/u/770x0/7d957bd27dd562bee7aaa89eafa0bbe6.jpg#7d957bd27dd562bee7aaa89eafa0bbe6',
+      album_art: null,
     }
   ], []);
 
@@ -33,9 +22,16 @@ function App() {
     response: []
   });
 
-  const user_request = 'A few recent hits';
+  const [user_request, setUserRequest] = useState('A few recent hits');
+
+  const handleInputChange = (event) => {
+    setUserRequest(event.target.value);
+  };
 
   const fetchSongs = async () => {
+    // Fetch playlist from API
+    console.debug('Fetching playlist for:', user_request);
+
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
       const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`)}`);
@@ -51,20 +47,42 @@ function App() {
     }
   };
 
+  const songs = useMemo(() => APIResponse.response.length > 0 ? APIResponse.response : default_songs, [APIResponse.response, default_songs]);
+
+  const [showGenerationCard, setShowGenerationCard] = useState(true);
+
+  const [showNowPlaying, setShowNowPlaying] = useState(false);
+
+  useEffect(() => {
+    if (songs !== default_songs) {
+      setShowGenerationCard(false);
+      setShowNowPlaying(true);
+    }
+  }, [songs]);
+
+  const [generationTriggered, setGenerationTriggered] = useState(false);
+
   const fetching = useRef(false); // useRef to manage the fetching flag
 
   useEffect(() => {
-  if (fetching.current)
+  console.debug(`Generation triggered: ${generationTriggered}`);
+
+  if (fetching.current || !generationTriggered)
       return;
-
-  // Fetch playlist from API
-  console.debug('Fetching playlist.');
+  
   fetching.current = true;
-  fetchSongs();
-    
-  }, []);
 
-  const songs = useMemo(() => APIResponse.response.length > 0 ? APIResponse.response : default_songs, [APIResponse.response, default_songs]);
+  (async () => {
+    await fetchSongs();
+    setGenerationTriggered(false);
+    fetching.current = false;
+  })();
+    // eslint-disable-next-line
+  }, [generationTriggered]);
+
+  const handleGeneration = () => {
+    setGenerationTriggered(true);
+  }
 
   const playNextSong = () => {
     const newIndex = (currentSongIndex + 1) % songs.length;
@@ -149,8 +167,6 @@ function App() {
       console.error('Error extracting colors:', error);
     }
   };
-  
-  
 
   useEffect(() => {
     updateBackgroundGradient(songInfo.artworkSrc);
@@ -162,7 +178,10 @@ function App() {
       <div className="background-gradient"/>
       <div class="frosted-background-overlay"/>
       <div className="content">
-        <NowPlaying songInfo={songInfo} />
+        <div className="cover-art-container">
+          {showGenerationCard && <GenerationCard handleInputChange={handleInputChange} handleGeneration={handleGeneration} />}
+          {showNowPlaying && <NowPlaying songInfo={songInfo} />}
+        </div>
       </div>
       <Player playNextSong={playNextSong} playPreviousSong={playPreviousSong} />
     </div>
