@@ -36,7 +36,8 @@ function App() {
 
   const fetchSongs = async () => {
     try {
-      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('http://playlist.us.to:5000/query?message=' + user_request)}`);
+      const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
+      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`)}`);
       let data = await response.json();
       data = JSON.parse(data.contents)
       console.log(data);
