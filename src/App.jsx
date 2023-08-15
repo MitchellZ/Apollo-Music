@@ -34,10 +34,16 @@ function App() {
 
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
-      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(`http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`)}`);
-      console.debug(response);
+     
+      const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+      const apiUrl = `http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`;
+      
+      const response = await fetch(proxyUrl + apiUrl, {
+        'x-requested-with': 'apollo_music'
+      });
+
       let data = await response.json();
-      data = JSON.parse(data.contents)
+      // data = JSON.parse(data.contents)
       if (data.response && data.response.length > 0) {
         setAPIResponse(data);
       }
