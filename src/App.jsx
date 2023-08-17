@@ -35,12 +35,10 @@ function App() {
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
      
-      const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-      const apiUrl = `http://playlist.us.to:5000/query?message=${user_request}&${uniqueParam}`;
+      const proxyUrl = '/api';
+      const apiUrl = `/query?message=${user_request}&${uniqueParam}`;
       
-      const response = await fetch(proxyUrl + apiUrl, {
-        'x-requested-with': 'apollo_music'
-      });
+      const response = await fetch(proxyUrl + apiUrl);
 
       let data = await response.json();
       // data = JSON.parse(data.contents)
