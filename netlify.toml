@@ -1,0 +1,6 @@
+[[redirects]]
+  from = "/query"
+  to = "http://playlist.us.to:5000/query"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
