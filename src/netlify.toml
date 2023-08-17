@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/app/*"  # Requests to /app/*
+  to = "http://playlist.us.to:5000/:splat"  # Proxy to the target URL with wildcard parameter
+  status = 200  # HTTP status code to return for the proxy request
