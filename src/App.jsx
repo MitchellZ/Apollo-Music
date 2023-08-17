@@ -35,10 +35,10 @@ function App() {
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
      
-      const proxyUrl = '/api';
+      // const proxyUrl = '';
       const apiUrl = `/query?message=${user_request}&${uniqueParam}`;
       
-      const response = await fetch(proxyUrl + apiUrl);
+      const response = await fetch(apiUrl);
 
       let data = await response.json();
       // data = JSON.parse(data.contents)
@@ -70,7 +70,7 @@ function App() {
   const fetching = useRef(false); // useRef to manage the fetching flag
 
   useEffect(() => {
-  console.debug(`Generation triggered: ${generationTriggered}`);
+  // console.debug(`Generation triggered: ${generationTriggered}`);
 
   if (fetching.current || !generationTriggered)
       return;
