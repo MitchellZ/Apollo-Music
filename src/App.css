@@ -41,20 +41,6 @@ body, html {
   /* Add your styles for the main content here */
 }
 
-.cover-art-container {
-  /* Disable select */
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-drag: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 200px); /* Adjust the height as needed to center the cover art */
-}
-
 .generation-card {
   /* Align content to center */
   display: flex;
@@ -79,6 +65,7 @@ body, html {
   background-clip: text;
   -webkit-background-clip: text;
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .generation-request {
@@ -96,6 +83,15 @@ body, html {
   margin-bottom: 10%;
 }
 
+.error {
+  color: pink;
+  text-align: center;
+  font-size: 12px;
+  margin-top: -18px;
+  width: 78%;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .generation-button{
   /* Button with gradient and modern styling */
   background: linear-gradient(to right, #80b8ef, #bb638d);
@@ -111,16 +107,38 @@ body, html {
   bottom: 5%;
 }
 
-.generation-button:hover{
-  /* Button with gradient and modern styling */
-  background: linear-gradient(to right, #6694c2, #b05c85);
-  color: rgb(234, 234, 234);
+.generation-button .spinner{
+  /* Animate the spinner */
+  animation: spin 2s linear infinite;
+  margin-left: 2px;
+  margin-bottom: -1px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .generation-button:active{
   /* Button with gradient and modern styling */
   background: linear-gradient(to right, #344b62, #703c55);
   color: rgb(200, 200, 200);
+  text-shadow: none;
+}
+
+.cover-art-container {
+  /* Disable select */
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 200px); /* Adjust the height as needed to center the cover art */
+  overflow: hidden;
 }
 
 .cover-art-image {
@@ -128,27 +146,51 @@ body, html {
   height: 72vw;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the cover art */
-  border-radius: 5%; /* Round the corners of the cover art */
+  border-radius: 2.5%;
+  margin-left: calc(50% - 36vw); /* Adjust the value based on your image width */
 }
 
 .song-info {
   text-align: center;
   margin-top: 10px; /* Add spacing between cover art and song info */
+  position: relative; /* Add position relative to create a reference for absolute positioning */
+  min-width: 72vw;
 }
 
 .artist {
   font-size: 16px;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(212, 212, 212, 0.92);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.song-title-marquee {
+  position: relative;
+  height: 30px;
+  overflow: hidden;
+}
+
 .song-title {
-  margin: -14px;
+  margin-top: -6px;
   font-size: 26px;
   font-weight: 700;
   color: rgba(255, 255, 255, 0.92);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+}
+
+.song-title.marquee{
+  animation: marquee 10s linear infinite;
+  animation-delay: -2.5s; /* Random Delay the animation start so that it begins on screen */
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(110%);
+  }
+  100% {
+    transform: translateX(-110%);
+  }
 }
 
 .player-card {

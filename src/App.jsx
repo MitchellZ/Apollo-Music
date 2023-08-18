@@ -28,9 +28,14 @@ function App() {
     setUserRequest(event.target.value);
   };
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
   const fetchSongs = async () => {
     // Fetch playlist from API
     console.debug('Fetching playlist for:', user_request);
+    setLoading(true);
+    setError(false);
 
     try {
       const uniqueParam = `nocache=${Date.now()}`; // Using a timestamp as a unique parameter
@@ -45,10 +50,16 @@ function App() {
       if (data.response && data.response.length > 0) {
         setAPIResponse(data);
       }
+
+      // Check status code
+      if (!response.ok) {
+        setError(true);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
-      console.log(error);
+      setError(true);
     }
+    setLoading(false);
   };
 
   const songs = useMemo(() => APIResponse.response.length > 0 ? APIResponse.response : default_songs, [APIResponse.response, default_songs]);
@@ -184,7 +195,7 @@ function App() {
       <div class="frosted-background-overlay"/>
       <div className="content">
         <div className="cover-art-container">
-          {showGenerationCard && <GenerationCard handleInputChange={handleInputChange} handleGeneration={handleGeneration} />}
+          {showGenerationCard && <GenerationCard handleInputChange={handleInputChange} handleGeneration={handleGeneration} loading={loading} error={error} />}
           {showNowPlaying && <NowPlaying songInfo={songInfo} />}
         </div>
       </div>
