@@ -110,8 +110,8 @@ body, html {
 .generation-button .spinner{
   /* Animate the spinner */
   animation: spin 2s linear infinite;
-  margin-left: 2px;
-  margin-bottom: -1px;
+  margin-left: 2.75px;
+  margin-bottom: -1.75px;
 }
 
 @keyframes spin {
