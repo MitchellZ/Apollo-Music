@@ -5,7 +5,7 @@ function NowPlaying({ songInfo }) {
   useEffect(() => {
     const songTitleElement = document.querySelector(".song-title");
 
-    if (window.innerWidth -10 <= songTitleElement.clientWidth) {
+    if (window.innerWidth -20 <= songTitleElement.clientWidth) {
       // console.debug("Marquee");
       songTitleElement.classList.add('marquee');
     } else {;
