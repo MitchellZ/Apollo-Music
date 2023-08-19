@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
-function Player({ playNextSong, playPreviousSong }) {
+function Player({ songInfo, playNextSong, playPreviousSong }) {
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const progressBarContainerRef = useRef(null);
@@ -183,7 +183,7 @@ function Player({ playNextSong, playPreviousSong }) {
           <FaStepForward />
         </button>
       </div>
-      <audio ref={audioRef} src="/audio/Dance_The_Night.mp3" />
+      <audio ref={audioRef} src={songInfo.link} />
     </div>
   );
 }

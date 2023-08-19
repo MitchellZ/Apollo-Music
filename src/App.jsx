@@ -115,7 +115,7 @@ function App() {
       return {
         title: songs[index].song,
         artist: songs[index].artist,
-        album: songs[index].album,
+        link: getYouTubeVideoID(songs[index].song_link),
         artworkSrc: songs[index].album_art || '/covers/default.png',
         artworkType: 'image/png'
       };
@@ -126,7 +126,6 @@ function App() {
       const metadata = new window.MediaMetadata({
         title: songInfo.title,
         artist: songInfo.artist,
-        album: songInfo.album,
         artwork: [{ src: songInfo.artworkSrc, type: songInfo.artworkType }]
       });
       navigator.mediaSession.metadata = metadata;
@@ -136,10 +135,20 @@ function App() {
   const songInfo = {
     title: songs[currentSongIndex].song,
     artist: songs[currentSongIndex].artist,
-    album: songs[currentSongIndex].album,
+    link: getYouTubeVideoID(songs[currentSongIndex].song_link),
     artworkSrc: songs[currentSongIndex].album_art || '/covers/default.png',
     artworkType: 'image/png'
-  };
+};
+
+function getYouTubeVideoID(url) {
+    // Check if the URL contains a video ID
+    if (!url)
+      return '/audio/Dance_The_Night.mp3';
+    if (!url.includes('v='))
+      return '/audio/Dance_The_Night.mp3';
+    const videoId = url.split('v=')[1];
+      return 'https://vid.puffyan.us/latest_version?id=' + videoId + '&itag=140';
+}
 
   const extractColorsFromArtwork = async (artworkSrc) => {
     const img = new Image();
@@ -199,7 +208,7 @@ function App() {
           {showNowPlaying && <NowPlaying songInfo={songInfo} />}
         </div>
       </div>
-      <Player playNextSong={playNextSong} playPreviousSong={playPreviousSong} />
+      <Player songInfo={songInfo} playNextSong={playNextSong} playPreviousSong={playPreviousSong} />
     </div>
   );
 }
