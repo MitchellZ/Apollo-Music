@@ -142,12 +142,13 @@ body, html {
 }
 
 .cover-art-image {
-  width: 72vw;
-  height: 72vw;
+  height: 45vh;
+  width: 45vh;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the cover art */
   border-radius: 2.5%;
-  margin-left: calc(50% - 36vw); /* Adjust the value based on your image width */
+  margin: auto;
+  display: block;
 }
 
 .song-info {
