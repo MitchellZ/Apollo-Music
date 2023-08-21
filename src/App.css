@@ -149,12 +149,14 @@ body, html {
 }
 
 .cover-art-image {
-  height: 35vh;
-  width: 35vh;
+  pointer-events: none;
+  height: 35.5vh;
+  width: 35.5vh;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the cover art */
   border-radius: 2.5%;
   margin: auto;
+  margin-top: 3vh;
   display: block;
 }
 
