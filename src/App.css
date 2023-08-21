@@ -244,6 +244,41 @@ body, html {
   z-index: 1;
 }
 
+.progress-bar.buffering {
+  animation: bufferingAnimation 0.75s linear infinite alternate;
+  animation-delay: 0.75s;
+}
+
+@keyframes bufferingAnimation {
+  0%, 100% {
+    background: linear-gradient(to right, gray 0%, white 15%, gray 30%, gray 100%);
+  }
+  12.5% {
+    background: linear-gradient(to right, gray 0%, gray 10%, white 20%, gray 40%, gray 100%);
+  }
+  25% {
+    background: linear-gradient(to right, gray 0%, gray 15%, white 35%, gray 55%, gray 100%);
+  }
+  37.5% {
+    background: linear-gradient(to right, gray 0%, gray 20%, white 40%, gray 60%, gray 100%);
+  }
+  50% {
+    background: linear-gradient(to right, gray 0%, gray 30%, white 50%, gray 70%, gray 100%);
+  }
+  62.5% {
+    background: linear-gradient(to right, gray 0%, gray 40%, white 60%, gray 80%, gray 100%);
+  }
+  75% {
+    background: linear-gradient(to right, gray 0%, gray 45%, white 65%, gray 85%, gray 100%);
+  }
+  87.5% {
+    background: linear-gradient(to right, gray 0%, gray 50%, white 70%, gray 90%, gray 100%);
+  }
+  100% {
+    background: linear-gradient(to right, gray 0%, gray 60%, white 85%, gray 100%);
+  }
+}
+
 /* Add the thumb to the progress bar */
 .progress-thumb {
   position: absolute;
@@ -258,8 +293,18 @@ body, html {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add a drop shadow */
 }
 
+.progress-thumb.hidden {
+  animation: hiddenThumb 1s infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes hiddenThumb {
+  0%, 100% {
+    opacity: 0;
+  }
+}
+
 /* Custom styles for the play, pause, skip buttons, etc. */
-/* ... (Add your custom styles for the buttons here) ... */
 
 .button-container {
   display: flex;

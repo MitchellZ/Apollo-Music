@@ -9,6 +9,7 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const updateTimeWhilePlaying = useCallback(() => {
     if (isPlaying) {
@@ -39,12 +40,19 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
       setDuration(currentAudioRef.duration);
     };
 
+    const handleWaiting = () => {
+      setIsBuffering(false);
+      console.log('Metadata loaded.');
+    };
+
+    currentAudioRef.addEventListener('loadedmetadata', handleWaiting);
     currentAudioRef.addEventListener('pause', handlePause);
     currentAudioRef.addEventListener('playing', handlePlay);
     currentAudioRef.addEventListener('timeupdate', handleTimeUpdate);
     currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
     return () => {
+      currentAudioRef.removeEventListener('loadedmetadata', handleWaiting);
       currentAudioRef.removeEventListener('pause', handlePause);
       currentAudioRef.removeEventListener('playing', handlePlay);
       currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
@@ -54,9 +62,9 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
 
   useEffect(() => {
     if ('mediaSession' in navigator) {
- navigator.mediaSession.setActionHandler('play', () => {handlePlayPause();});
-      navigator.mediaSession.setActionHandler('previoustrack', () => {handleSkipBackward();});
-      navigator.mediaSession.setActionHandler('nexttrack', () => {handleSkipForward();});
+      navigator.mediaSession.setActionHandler('play', () => { handlePlayPause(); });
+      navigator.mediaSession.setActionHandler('previoustrack', () => { handleSkipBackward(); });
+      navigator.mediaSession.setActionHandler('nexttrack', () => { handleSkipForward(); });
     }
   });
 
@@ -71,6 +79,7 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
   };
 
   const handleSkipForward = () => {
+    setIsBuffering(true);
     playNextSong();
     const seekTime = 0;
     setCurrentTime(seekTime);
@@ -78,6 +87,7 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
   };
 
   const handleSkipBackward = () => {
+    setIsBuffering(true);
     if (currentTime <= 5) {
       playPreviousSong();
     }
@@ -163,9 +173,10 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
           onMouseDown={handleProgressBarMouseDown}
           onTouchStart={handleProgressBarTouchStart}
         >
-          <div className="progress-bar" style={{ '--progress': progress + '%' }} ref={progressBarRef}>
-            <div className="progress-thumb" style={{ left: progress + '%' }}></div>
+          <div className={`progress-bar ${isBuffering ? 'buffering' : ''}`} style={{ '--progress': progress + '%' }} ref={progressBarRef}>
+            <div className={`progress-thumb ${isBuffering ? 'hidden' : ''}`} style={{ left: progress + '%' }}></div>
           </div>
+
         </div>
         <div className="timecodes">
           <span>{formatTime(currentTime)}</span>

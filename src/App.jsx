@@ -14,6 +14,12 @@ function App() {
       artist: 'Dua Lipa',
       link: '/audio/Dance_The_Night.mp3',
       album_art: null,
+    },
+    {
+      song: 'Levitating',
+      artist: 'Dua Lipa',
+      link: '/audio/Levitating.mp3',
+      album_art: null,
     }
   ], []);
 
