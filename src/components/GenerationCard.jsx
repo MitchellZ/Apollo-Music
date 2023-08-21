@@ -12,6 +12,8 @@ export function GenerationCard({
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleGeneration();
+      // Hide keyboard
+      event.target.blur();
     }
   };
 
@@ -19,6 +21,6 @@ export function GenerationCard({
             <h2>What would you like to hear?</h2>
             <input className="generation-request" onChange={handleInputChange} onKeyDown={handleKeyPress} type="text"/>
             <p className="error" style={{display: error ? "" : "none"}}>Oh no! Unable to generate playlist.</p>
-            <button className="generation-button" onClick={handleGeneration}>Generate Playlist <FaSpinner className="spinner" style={{display: loading ? "" : "none"}}/></button>
+            <button className="generation-button" onClick={handleGeneration} disabled={loading}>Generate Playlist <FaSpinner className="spinner" style={{display: loading ? "" : "none"}}/></button>
           </div>;
 }

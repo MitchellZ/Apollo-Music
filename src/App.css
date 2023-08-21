@@ -126,6 +126,13 @@ body, html {
   text-shadow: none;
 }
 
+.generation-button:disabled{
+  /* Button with gradient and modern styling */
+  background: linear-gradient(to right, #415e7b, #874766);
+  color: rgb(200, 200, 200);
+  text-shadow: none;
+}
+
 .cover-art-container {
   /* Disable select */
   user-select: none;
@@ -142,8 +149,8 @@ body, html {
 }
 
 .cover-art-image {
-  height: 45vh;
-  width: 45vh;
+  height: 35vh;
+  width: 35vh;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow to the cover art */
   border-radius: 2.5%;
