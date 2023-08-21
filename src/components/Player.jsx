@@ -10,6 +10,7 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [playOnRollOver, setPlayOnRollOver] = useState(false);
 
   const updateTimeWhilePlaying = useCallback(() => {
     if (isPlaying) {
@@ -18,11 +19,47 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
     }
   }, [isPlaying]);
 
+  const handleSkipForward = useCallback(() => {
+    setIsBuffering(true);
+    if (isPlaying || playOnRollOver){
+      // Play next song automatically
+      setPlayOnRollOver(true);
+    }
+    else {
+      // Start next song paused
+      setPlayOnRollOver(false);
+    }
+    playNextSong();
+    const seekTime = 0;
+    setCurrentTime(seekTime);
+    audioRef.current.currentTime = seekTime;
+  }, [isPlaying, playOnRollOver, setIsBuffering, setPlayOnRollOver, playNextSong, setCurrentTime, audioRef]);
+
+
+  const handleSkipBackward = () => {
+    if (isPlaying || playOnRollOver){
+      // Play previous song automatically
+      setPlayOnRollOver(true);
+    }
+    else {
+      // Start previous song paused
+      setPlayOnRollOver(false);
+    }
+    if (currentTime <= 5) {
+      setIsBuffering(true);
+      playPreviousSong();
+    }
+    const seekTime = 0;
+    setCurrentTime(seekTime);
+    audioRef.current.currentTime = seekTime;
+  };
+
   useEffect(() => {
     const currentAudioRef = audioRef.current;
 
     const handlePause = () => {
       setIsPlaying(false);
+      setPlayOnRollOver(false);
     };
 
     const handlePlay = () => {
@@ -37,14 +74,32 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
     };
 
     const handleLoadedData = () => {
-      setDuration(currentAudioRef.duration);
+      // Loaded audio
+      if (playOnRollOver) {
+        // Play on rollover (automatically start next song in playlist)
+        audioRef.current.play();
+      }
     };
 
     const handleWaiting = () => {
       setIsBuffering(false);
-      console.log('Metadata loaded.');
+      // Update duration
+      setDuration(currentAudioRef.duration);
     };
 
+    const handleCanPlay = () => {
+      // console.log('Can play.');
+    }
+
+    const handleReachedEnd = () => {
+      // Move to next song in playlist
+      handleSkipForward();
+      // Set next song to play automatically
+      setPlayOnRollOver(true);
+    }
+
+    currentAudioRef.addEventListener('ended', handleReachedEnd);
+    currentAudioRef.addEventListener('canplaythrough', handleCanPlay);
     currentAudioRef.addEventListener('loadedmetadata', handleWaiting);
     currentAudioRef.addEventListener('pause', handlePause);
     currentAudioRef.addEventListener('playing', handlePlay);
@@ -52,13 +107,15 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
     currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
     return () => {
+      currentAudioRef.removeEventListener('ended', handleReachedEnd);
+      currentAudioRef.removeEventListener('canplaythrough', handleCanPlay);
       currentAudioRef.removeEventListener('loadedmetadata', handleWaiting);
       currentAudioRef.removeEventListener('pause', handlePause);
       currentAudioRef.removeEventListener('playing', handlePlay);
       currentAudioRef.removeEventListener('timeupdate', handleTimeUpdate);
       currentAudioRef.removeEventListener('loadeddata', handleLoadedData);
     };
-  }, [isPlaying, updateTimeWhilePlaying]);
+  }, [isPlaying, updateTimeWhilePlaying, playOnRollOver, handleSkipForward]);
 
   useEffect(() => {
     if ('mediaSession' in navigator) {
@@ -76,24 +133,6 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
       audioRef.current.play();
       requestAnimationFrame(updateTimeWhilePlaying);
     }
-  };
-
-  const handleSkipForward = () => {
-    setIsBuffering(true);
-    playNextSong();
-    const seekTime = 0;
-    setCurrentTime(seekTime);
-    audioRef.current.currentTime = seekTime;
-  };
-
-  const handleSkipBackward = () => {
-    setIsBuffering(true);
-    if (currentTime <= 5) {
-      playPreviousSong();
-    }
-    const seekTime = 0;
-    setCurrentTime(seekTime);
-    audioRef.current.currentTime = seekTime;
   };
 
   const formatTime = (timeInSeconds) => {
