@@ -73,11 +73,9 @@ function App() {
 
     // If the API response is empty, use default_songs
     if (processedSongs.length > 0){
-      console.debug('Songs:', processedSongs.length);
       return processedSongs;
     }
     else {
-      console.debug('Default songs:', default_songs.length);
       return default_songs;
     }
   }, [APIResponse.response, default_songs]);
