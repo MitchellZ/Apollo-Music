@@ -54,6 +54,19 @@ body, html {
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   background-color: rgba(20, 20, 20, 0.32);
+  animation: popup 0.5s;
+}
+
+@keyframes popup {
+  0% {
+    /* Start down low */
+    transform: translateY(50%);
+    opacity: 0;
+  }
+  100% {
+    transform: 100%;
+    opacity: 1;
+  }
 }
 
 .generation-card h2 {
@@ -131,6 +144,10 @@ body, html {
   background: linear-gradient(to right, #415e7b, #874766);
   color: rgb(200, 200, 200);
   text-shadow: none;
+}
+
+.now-playing {
+  animation: popup 0.5s;
 }
 
 .cover-art-container {
@@ -312,8 +329,10 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center; /* Center the buttons both horizontally and vertically */
+  height: 72px;
   margin-top: 20px;
   margin-bottom: 16px;
+  padding: 0px 5%;
   flex-grow: 1; /* Allow the button container to grow and take up the remaining space */
   -webkit-tap-highlight-color: transparent; /* Remove the tap highlight on mobile devices */
 }
@@ -334,8 +353,9 @@ body, html {
 }
 
 button#play-pause {
-  width: 70px;
-  height: 70px;
+  width: auto;
+  height: auto;
+  padding: 20px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   background-color: transparent; /* Set the background color for the play/pause button */
   border: solid white 3.5px;
@@ -354,4 +374,15 @@ button#play-pause:active {
 
 .button-container button:active {
   color: lightgray;
+}
+
+.button-container button:disabled {
+  /* Disable hover */
+  pointer-events: none;
+}
+
+.button-container button#outside-button {
+  font-size: 18pt;
+  font-weight: 100;
+  margin: 0 auto;
 }

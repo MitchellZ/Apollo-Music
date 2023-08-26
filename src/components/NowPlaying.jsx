@@ -5,10 +5,11 @@ function NowPlaying({ songInfo }) {
   useEffect(() => {
     const songTitleElement = document.querySelector(".song-title");
 
-    if (window.innerWidth -20 <= songTitleElement.clientWidth) {
+    if (window.innerWidth - 20 <= songTitleElement.clientWidth) {
       // console.debug("Marquee");
       songTitleElement.classList.add('marquee');
-    } else {;
+    } else {
+      ;
       // console.debug("Not Marquee");
       songTitleElement.classList.remove('marquee');
     }
@@ -16,15 +17,17 @@ function NowPlaying({ songInfo }) {
 
   return (
     <div>
-      <img
-        className="cover-art-image"
-        src={songInfo.artworkSrc}
-        alt="Cover Art"
-        draggable="false"
-      />
-      <div className="song-info">
-        <p className="artist">{songInfo.artist}</p>
+      <div className="now-playing">
+        <img
+          className="cover-art-image"
+          src={songInfo.artworkSrc}
+          alt="Cover Art"
+          draggable="false"
+        />
+        <div className="song-info">
+          <p className="artist">{songInfo.artist}</p>
           <p className="song-title">{songInfo.title}</p>
+        </div>
       </div>
     </div>
   );

@@ -11,13 +11,13 @@ function App() {
 
   const default_songs = useMemo(() => [
     {
-      song: 'Dance The Night',
+      title: 'Dance The Night',
       artist: 'Dua Lipa',
       link: '/audio/Dance_The_Night.mp3',
       album_art: null,
     },
     {
-      song: 'Levitating',
+      title: 'Levitating',
       artist: 'Dua Lipa',
       link: '/audio/Levitating.mp3',
       album_art: null,
@@ -137,7 +137,7 @@ function App() {
           {showNowPlaying && <NowPlaying songInfo={songInfo} />}
         </div>
       </div>
-      <Player songInfo={songInfo} playNextSong={playNextSong} playPreviousSong={playPreviousSong} />
+      <Player songInfo={songInfo} playNextSong={playNextSong} playPreviousSong={playPreviousSong} showNowPlaying={showNowPlaying} setShowNowPlaying={setShowNowPlaying} showGenerationCard={showGenerationCard} setShowGenerationCard={setShowGenerationCard} />
     </div>
   );
 }

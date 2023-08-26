@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
+import { FaPlay, FaPause, FaStepBackward, FaStepForward, FaMagic } from 'react-icons/fa';
 
-function Player({ songInfo, playNextSong, playPreviousSong }) {
+function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setShowNowPlaying, showGenerationCard, setShowGenerationCard }) {
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
   const progressBarContainerRef = useRef(null);
@@ -204,6 +204,12 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
     };
   }, [isDragging, updateSeekTime]);
 
+  function handleDisplayInputCard() {
+    // Toggle Generation Card and Now Playing
+    setShowGenerationCard(!showGenerationCard);
+    setShowNowPlaying(!showNowPlaying);
+  }
+
   return (
     <div className="player-card">
       <div className="progress-bar-container" ref={progressBarContainerRef}>
@@ -223,6 +229,9 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
         </div>
       </div>
       <div className="button-container">
+        <button id='outside-button' disabled={true}>
+          {/* {Empty Button} */}
+        </button>
         <button onClick={handleSkipBackward}>
           <FaStepBackward />
         </button>
@@ -231,6 +240,9 @@ function Player({ songInfo, playNextSong, playPreviousSong }) {
         </button>
         <button onClick={handleSkipForward}>
           <FaStepForward />
+        </button>
+        <button id='outside-button' onClick={handleDisplayInputCard}>
+          <FaMagic />
         </button>
       </div>
       <audio ref={audioRef} src={songInfo.link} />
