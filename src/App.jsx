@@ -60,6 +60,7 @@ function App() {
 
   const [showNowPlaying, setShowNowPlaying] = useState(false);
 
+  // When songs are updated show now playing
   useEffect(() => {
     if (songs !== default_songs) {
       setShowGenerationCard(false);
@@ -68,13 +69,16 @@ function App() {
     // eslint-disable-next-line
   }, [songs]);
 
+  // Used when a request is inputted
   const [generationTriggered, setGenerationTriggered] = useState(false);
 
-  const fetching = useRef(false); // useRef to manage the fetching flag
+  // Flag to indicate whether songs are actively being fetched from the API
+  const fetching = useRef(false);
 
   useEffect(() => {
-    // console.debug(`Generation triggered: ${generationTriggered}`);
+    // Fetch songs when generationTriggered
 
+    // Unless we're currently fetching
     if (fetching.current || !generationTriggered)
       return;
 
@@ -82,6 +86,8 @@ function App() {
 
     (async () => {
       await ApiUtils.fetchSongs(user_request, setLoading, setError, setAPIResponse);
+
+      // Reset states
       setGenerationTriggered(false);
       fetching.current = false;
     })();
@@ -89,6 +95,7 @@ function App() {
   }, [generationTriggered]);
 
   const handleGeneration = () => {
+    // Triggered when the generation button is pressed or when enter is pressed
     setGenerationTriggered(true);
   }
 
@@ -111,7 +118,7 @@ function App() {
   };  
 
   useEffect(() => {
-
+    // Update the media session when the current song changes (for external media controls and metadata)
     if ('mediaSession' in navigator) {
       const metadata = new window.MediaMetadata({
         title: songInfo.title,
@@ -123,6 +130,7 @@ function App() {
   }, [songInfo]);
 
   useEffect(() => {
+    // When the current song artwork changes update the background gradient to match
     ImageUtils.updateBackgroundGradient(songInfo.artworkSrc);
     // eslint-disable-next-line
   }, [songInfo.artworkSrc]);
