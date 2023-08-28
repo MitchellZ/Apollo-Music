@@ -14,7 +14,9 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
 
   const updateTimeWhilePlaying = useCallback(() => {
     if (isPlaying) {
+      // Set current time state variable
       setCurrentTime(audioRef.current.currentTime);
+      // Schedule the next update on next animation frame
       requestAnimationFrame(updateTimeWhilePlaying);
     }
   }, [isPlaying]);
@@ -29,9 +31,14 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
       // Start next song paused
       setPlayOnRollOver(false);
     }
+
+    // This function updates the currentSongIndex which in turn updates the songInfo
     playNextSong();
+    // Reset the seek time
     const seekTime = 0;
+    // Set the currentTime state variable
     setCurrentTime(seekTime);
+    // Set the currentTime of the audio element
     audioRef.current.currentTime = seekTime;
   }, [isPlaying, playOnRollOver, setIsBuffering, setPlayOnRollOver, playNextSong, setCurrentTime, audioRef]);
 
@@ -98,6 +105,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
       setPlayOnRollOver(true);
     }
 
+    // Add event listeners for audio element events
     currentAudioRef.addEventListener('ended', handleReachedEnd);
     currentAudioRef.addEventListener('canplaythrough', handleCanPlay);
     currentAudioRef.addEventListener('loadedmetadata', handleWaiting);
@@ -106,6 +114,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
     currentAudioRef.addEventListener('timeupdate', handleTimeUpdate);
     currentAudioRef.addEventListener('loadeddata', handleLoadedData);
 
+    // Cleanup (remove event listeners on unmount)
     return () => {
       currentAudioRef.removeEventListener('ended', handleReachedEnd);
       currentAudioRef.removeEventListener('canplaythrough', handleCanPlay);
@@ -118,6 +127,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
   }, [isPlaying, updateTimeWhilePlaying, playOnRollOver, handleSkipForward]);
 
   useEffect(() => {
+    // Set media session actionHandlers (for external media controls)
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', () => { handlePlayPause(); });
       navigator.mediaSession.setActionHandler('previoustrack', () => { handleSkipBackward(); });
@@ -135,14 +145,17 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
     }
   };
 
+  // Time formatting for player
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const seconds = Math.floor(timeInSeconds % 60);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  // Song progress in terms of a percentage
   const progress = (currentTime / duration) * 100;
 
+  // Functions for handling interactions with the progress bar
   const handleProgressBarMouseDown = (e) => {
     setIsDragging(true);
     updateSeekTime(e.clientX);
