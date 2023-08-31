@@ -174,6 +174,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
     setIsDragging(false);
   };
 
+  // Update seek time of the progress bar based on the clientX (mouse click/touch)
   const updateSeekTime = useCallback((clientX) => {
     const progressBar = progressBarRef.current;
     const progressBarContainer = progressBarContainerRef.current;
