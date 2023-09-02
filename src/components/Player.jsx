@@ -174,7 +174,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
     setIsDragging(false);
   };
 
-  // Update seek time of the progress bar based on the clientX (mouse click/touch)
+  // Function to update seek time of the progress bar based on the clientX (mouse click/touch)
   const updateSeekTime = useCallback((clientX) => {
     const progressBar = progressBarRef.current;
     const progressBarContainer = progressBarContainerRef.current;
@@ -193,6 +193,7 @@ function Player({ songInfo, playNextSong, playPreviousSong, showNowPlaying, setS
   }, [audioRef, progressBarRef, progressBarContainerRef, duration]);
 
   useEffect(() => {
+    // Listen for mouse and touch events on the progress bar
     const handleDocumentMouseMove = (e) => {
       if (isDragging) {
         updateSeekTime(e.clientX);
