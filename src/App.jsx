@@ -6,6 +6,7 @@ import ImageUtils from './utils/ImageUtils';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import './App.css';
 
+// Main App component
 function App() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
